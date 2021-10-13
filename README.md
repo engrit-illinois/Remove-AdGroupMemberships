@@ -42,10 +42,11 @@ If not specified, no prompts will be given.
 
 ### -InputCsv \<string\>
 Required string.  
-The full path to a properly-formatted CSV file. See `example-input.csv`.  
+The full path to a properly-formatted CSV file.
 Columns named `User` and `Group` are required.  
 Additional columns may be present and will be ignored.  
 Columns may be in any order.  
+`example-input.csv` shows an example of the minimum requirements. `example-input2.csv` shows an example of a more complicated spreadsheet which still contains the minimum requirements, and will work just as well.  
 
 ### -OutputCsv \<string\>
 Required string.  
