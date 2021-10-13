@@ -21,7 +21,7 @@ A script to remove AD users from AD groups, based on given memberships.
 # Example
 It's recommended to capture the output in a variable, like so:
 ```powershell
-$result = Remove-AdGroupMemberships -TestRun -InputCsv "c:\input.csv" -OutputCsv "c:\output.csv"
+$result = Remove-AdGroupMemberships ...
 ```
 
 ### Common usage for EngrIT
