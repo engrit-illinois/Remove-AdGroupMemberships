@@ -12,7 +12,7 @@ Accepts a CSV file with one row for each user-in-group membership which should b
 - Developed and tested on PowerShell v7.1.
 
 # Usage
-1. Download `Remove-AdUsersFromGroups.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Remove-AdUsersFromGroups\Remove-AdUsersFromGroups.psm1`.
+1. Download `Remove-AdGroupMemberships.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Remove-AdGroupMemberships\Remove-AdGroupMemberships.psm1`.
 2. Run it using the examples and documentation provided below, including the `-TestRun` switch.
 3. Review the output to confirm that the changes match your expectations.
 4. Run it again without the `-TestRun` switch.
@@ -20,12 +20,12 @@ Accepts a CSV file with one row for each user-in-group membership which should b
 # Example
 It's recommended to capture the output in a variable, like so:
 ```powershell
-$result = Remove-AdUsersFromGroups -TestRun -InputCsv "c:\input.csv" -OutputCsv "c:\output.csv"
+$result = Remove-AdGroupMemberships -TestRun -InputCsv "c:\input.csv" -OutputCsv "c:\output.csv"
 ```
 
 ### Common usage for EngrIT
 ```powershell
-$result = Remove-AdUsersFromGroups -TestRun -InputCsv "c:\input.csv" -OutputCsv ":ENGRIT:" -Log ":ENGRIT:"
+$result = Remove-AdGroupMemberships -TestRun -InputCsv "c:\input.csv" -OutputCsv ":ENGRIT:" -Log ":ENGRIT:"
 ```
 
 # Parameters
@@ -45,7 +45,7 @@ Columns may be in any order.
 Required string.  
 The full path of a file to export results to, in CSV format.  
 If `:TS:` is given as part of the string, it will be replaced by a timestamp of when the script was started, with a format specified by `-LogFileTimestampFormat`.  
-Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdUsersFromGroups_<timestamp>.csv`).  
+Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMemberships_<timestamp>.csv`).  
 
 ### -OUDN \<string\>
 Optional string.  
@@ -57,7 +57,7 @@ Optional string.
 The full path of a file to log to.  
 If omitted, no log will be created.  
 If `:TS:` is given as part of the string, it will be replaced by a timestamp of when the script was started, with a format specified by `-LogFileTimestampFormat`.  
-Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdUsersFromGroups_<timestamp>.log`).  
+Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMemberships_<timestamp>.log`).  
 
 ### -NoConsoleOutput
 Optional switch.  
