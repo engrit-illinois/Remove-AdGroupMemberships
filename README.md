@@ -35,7 +35,7 @@ If specified, the script will skip the step where it actually modifies AD groups
 ### -InputCsv \<string\>
 Required string.  
 The full path to a properly-formatted CSV file. See `example-input.csv`.  
-Columns named `Users` and `Groups` are required.  
+Columns named `User` and `Group` are required.  
 Additional columns may be present and will be ignored.  
 Columns may be in any order.  
 
