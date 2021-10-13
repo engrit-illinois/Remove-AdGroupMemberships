@@ -1,0 +1,11 @@
+Group,User
+is-script-test-group2,is-script-test-user1
+is-script-test-group3,is-script-test-user1
+is-script-test-group3,is-script-test-user2
+is-script-test-group4,is-script-test-user1
+is-script-test-group4,is-script-test-user2
+is-script-test-group4,is-script-test-user3
+is-script-test-group5,is-script-test-user1
+is-script-test-group5,is-script-test-user2
+is-script-test-group5,is-script-test-user3
+is-script-test-group5,is-script-test-user4
