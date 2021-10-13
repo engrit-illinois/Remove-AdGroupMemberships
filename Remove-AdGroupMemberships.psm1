@@ -338,7 +338,7 @@ function Remove-AdGroupMemberships {
 				}
 				else {
 					# Remove membership
-					#Remove-AdGroupMember -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
+					Remove-AdGroupMember -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
 					
 					# Check that membership was removed
 					if(Validate-Membership $membership) {
