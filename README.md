@@ -1,5 +1,5 @@
 # Summary
-A script to remove AD users from AD groups, based on a given memberships.  
+A script to remove AD users from AD groups, based on given memberships.  
 
 # Behavior
 Accepts a CSV file with one row for each user-in-group membership which should be removed. Checks that all objects are valid and performs the membership removals.  
