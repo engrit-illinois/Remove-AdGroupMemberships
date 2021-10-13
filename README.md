@@ -2,7 +2,10 @@
 A script to remove AD users from AD groups, based on given memberships.  
 
 # Behavior
-Accepts a CSV file with one row for each user-in-group membership which should be removed. Checks that all AD objects and memberships exist and performs the membership removals.  
+- Accepts a CSV file with one row for each user-in-group membership which should be removed.
+- Validates that all given AD objects and memberships exist.
+- Performs the membership removals.
+- Outputs results to new CSV.
 See documentation of `-InputCsv` parameter.  
 
 # Requirements
