@@ -35,6 +35,11 @@ $result = Remove-AdGroupMemberships -TestRun -InputCsv "c:\input.csv" -OutputCsv
 Optional switch.  
 If specified, the script will skip the step where it actually modifies AD groups. Everything else (i.e. the data gathering, munging, logging, and output) will happen as normal.  
 
+### -ConfirmEach
+Optional switch.  
+If specified, the script will prompt for confirmation before each individual membership removal.  
+If not specified, no prompts will be given.  
+
 ### -InputCsv \<string\>
 Required string.  
 The full path to a properly-formatted CSV file. See `example-input.csv`.  

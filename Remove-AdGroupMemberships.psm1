@@ -12,6 +12,8 @@ function Remove-AdGroupMemberships {
 		
 		[switch]$TestRun,
 		
+		[switch]$ConfirmEach,
+		
 		[string]$GroupOudn = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		# ":ENGRIT:" will be replaced with "c:\engrit\logs\$($MODULE_NAME)_:TS:.log"
@@ -341,7 +343,7 @@ function Remove-AdGroupMemberships {
 					# Remove membership
 					# This could probably be optimized by removing all target members of each specific group at once,
 					# instead of potentially modifying the same group multiple times
-					Remove-AdGroupMember -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
+					Remove-AdGroupMember -Confirm:$ConfirmEach -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
 					
 					# Check that membership was removed
 					if(Validate-Membership $membership) {
