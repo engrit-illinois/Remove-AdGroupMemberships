@@ -249,7 +249,7 @@ function Remove-AdGroupMemberships {
 		
 		if($result) {
 			$dn = $result.DistinguishedName
-			log "$Type found. DN: `"$dn`"." -L 2
+			log "$Type exists. DN: `"$dn`"." -L 2
 		}
 		else {
 			log "$Type not found in AD!" -L 2
