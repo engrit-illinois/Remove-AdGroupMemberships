@@ -1,5 +1,3 @@
-# THIS SCRIPT IS A WORK IN PROGRESS
-
 # Summary
 A script to remove AD users from AD groups, based on a given memberships.  
 
