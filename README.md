@@ -47,7 +47,7 @@ The full path of a file to export results to, in CSV format.
 If `:TS:` is given as part of the string, it will be replaced by a timestamp of when the script was started, with a format specified by `-LogFileTimestampFormat`.  
 Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMemberships_<timestamp>.csv`).  
 
-### -OUDN \<string\>
+### -GroupOudn \<string\>
 Optional string.  
 The distinguished name of the AD OU to limit the search for the given groups. Only groups under this OU will be discovered and modified.  
 Default is `OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
