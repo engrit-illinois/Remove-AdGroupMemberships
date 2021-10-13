@@ -339,6 +339,8 @@ function Remove-AdGroupMemberships {
 				}
 				else {
 					# Remove membership
+					# This could probably be optimized by removing all target members of each specific group at once,
+					# instead of potentially modifying the same group multiple times
 					Remove-AdGroupMember -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
 					
 					# Check that membership was removed
