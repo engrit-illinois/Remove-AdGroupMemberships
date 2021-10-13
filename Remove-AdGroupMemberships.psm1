@@ -334,7 +334,8 @@ function Remove-AdGroupMemberships {
 			}
 			else {
 				if($TestRun) {
-					$result = "-TestRun was specified. Skipping removal."
+					# Space before "-TestRun" is included to prevent Excel from infuriatingly interpreting the string as a forumla
+					$result = " -TestRun was specified. Skipping removal."
 				}
 				else {
 					# Remove membership
