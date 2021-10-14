@@ -42,11 +42,15 @@ If not specified, no prompts will be given.
 
 ### -InputCsv \<string\>
 Required string.  
-The full path to a properly-formatted CSV file.
-Columns named `User` and `Group` are required.  
-Additional columns may be present and will be ignored.  
-Columns may be in any order.  
-`example-input1.csv` shows an example of the minimum requirements. `example-input2.csv` shows an example of a more complicated spreadsheet which still contains the minimum requirements, and will work just as well.  
+The full path to a properly-formatted CSV file.  
+Formatting requirements:  
+  - Columns named `User` and `Group` are required.
+  - Each row represents a single membership of a user in a group.
+  - Cells should just contain the regular name of the user or group.
+  - Additional columns may be present and will be ignored.  
+  - Columns may be in any order.  
+`example-input1.csv` shows an example of the minimum requirements.  
+`example-input2.csv` shows an example of the minimum requirements with some extraneous data in columns which will be ignored.  
 
 ### -OutputCsv \<string\>
 Required string.  
