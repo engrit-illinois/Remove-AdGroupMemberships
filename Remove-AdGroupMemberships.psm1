@@ -7,14 +7,17 @@ function Remove-AdGroupMemberships {
 		[Parameter(Mandatory=$true)]
 		[string]$InputCsv,
 		
+		[string]$UserColumn = "User",
+		[string]$GroupColumn = "Group",
+		
 		[Parameter(Mandatory=$true)]
 		[string]$OutputCsv,
+		
+		[string]$GroupOudn = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		[switch]$TestRun,
 		
 		[switch]$ConfirmEach,
-		
-		[string]$GroupOudn = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		
 		# ":ENGRIT:" will be replaced with "c:\engrit\logs\$($MODULE_NAME)_:TS:.log"
 		# ":TS:" will be replaced with start timestamp
@@ -202,8 +205,12 @@ function Remove-AdGroupMemberships {
 	function Log-Inputs {
 		log "Inputs:"
 		log "Input CSV: `"$InputCsv`"." -L 1
+		log "User column: `"$UserColumn`"." -L 1
+		log "Group column: `"$GroupColumn`"." -L 1
 		log "Output CSV: `"$OutputCsv`"." -L 1
-		log "OUDN: `"$OUDN`"." -L 1
+		log "Group OUDN: `"$GroupOudn`"." -L 1
+		log "TestRun: `"$TestRun`"." -L 1
+		log "ConfirmEach: `"$ConfirmEach`"." -L 1
 		log "Log: `"$Log`"." -L 1
 	}
 	
