@@ -71,7 +71,7 @@ Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMem
 
 ### -OutputUserColumn \<string\>
 Optional string.  
-The name of the column in the output CSV which contains the usernames of the memberships.  
+The name of the column in the output CSV which contains the user names of the memberships.  
 Default is `User`.  
 
 ### -OutputGroupColumn \<string\>
