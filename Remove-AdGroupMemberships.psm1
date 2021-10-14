@@ -10,11 +10,11 @@ function Remove-AdGroupMemberships {
 		[string]$InputUserColumn = "User",
 		[string]$InputGroupColumn = "Group",
 		
-		[string]$OutputUserColumn = "User",
-		[string]$OutputGroupColumn = "Group",
-		
 		[Parameter(Mandatory=$true)]
 		[string]$OutputCsv,
+		
+		[string]$OutputUserColumn = "User",
+		[string]$OutputGroupColumn = "Group",
 		
 		[string]$GroupOudn = "OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu",
 		

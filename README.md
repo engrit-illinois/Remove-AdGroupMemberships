@@ -63,6 +63,12 @@ Optional string.
 The name of the column in the input CSV which contains the group names of the memberships.  
 Default is `Group`.  
 
+### -OutputCsv \<string\>
+Required string.  
+The full path of a file to export results to, in CSV format.  
+If `:TS:` is given as part of the string, it will be replaced by a timestamp of when the script was started, with a format specified by `-LogFileTimestampFormat`.  
+Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMemberships_<timestamp>.csv`).  
+
 ### -OutputUserColumn \<string\>
 Optional string.  
 The name of the column in the output CSV which contains the usernames of the memberships.  
@@ -72,12 +78,6 @@ Default is `User`.
 Optional string.  
 The name of the column in the output CSV which contains the group names of the memberships.  
 Default is `Group`.  
-
-### -OutputCsv \<string\>
-Required string.  
-The full path of a file to export results to, in CSV format.  
-If `:TS:` is given as part of the string, it will be replaced by a timestamp of when the script was started, with a format specified by `-LogFileTimestampFormat`.  
-Specify `:ENGRIT:` to use a default path (i.e. `c:\engrit\logs\Remove-AdGroupMemberships_<timestamp>.csv`).  
 
 ### -GroupOudn \<string\>
 Optional string.  
