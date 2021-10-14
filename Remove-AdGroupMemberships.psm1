@@ -7,8 +7,11 @@ function Remove-AdGroupMemberships {
 		[Parameter(Mandatory=$true)]
 		[string]$InputCsv,
 		
-		[string]$UserColumn = "User",
-		[string]$GroupColumn = "Group",
+		[string]$InputUserColumn = "User",
+		[string]$InputGroupColumn = "Group",
+		
+		[string]$OutputUserColumn = "User",
+		[string]$OutputGroupColumn = "Group",
 		
 		[Parameter(Mandatory=$true)]
 		[string]$OutputCsv,
@@ -205,8 +208,10 @@ function Remove-AdGroupMemberships {
 	function Log-Inputs {
 		log "Inputs:"
 		log "Input CSV: `"$InputCsv`"." -L 1
-		log "User column: `"$UserColumn`"." -L 1
-		log "Group column: `"$GroupColumn`"." -L 1
+		log "Input user column: `"$InputUserColumn`"." -L 1
+		log "Input group column: `"$InputGroupColumn`"." -L 1
+		log "Output user column: `"$OutputUserColumn`"." -L 1
+		log "Output group column: `"$OutputGroupColumn`"." -L 1
 		log "Output CSV: `"$OutputCsv`"." -L 1
 		log "Group OUDN: `"$GroupOudn`"." -L 1
 		log "TestRun: `"$TestRun`"." -L 1
@@ -215,6 +220,7 @@ function Remove-AdGroupMemberships {
 	}
 	
 	function Import-Memberships {
+		log "Importing data from `"$InputCsv`"..."
 		
 		# make sure given input CSV exists
 		if(-not (Test-Path -PathType "Leaf" -Path $InputCsv)) {
@@ -227,15 +233,62 @@ function Remove-AdGroupMemberships {
 			Quit "No data found in input CSV `"$InputCsv`"!"
 		}
 		
-		# Log CSV data
-		$membershipsCount = count $memberships
-		log "Found $membershipsCount users in input CSV:"
-		Log-Object $memberships -L 1
+		# Count CSV data
+		log "Validating input..." -L 1
 		
-		# Filter and sort data
-		log "Filtering to only group and user columns, and sorting by group and then user:"
-		$memberships = $memberships | Select Group,User | Sort Group,User
-		Log-Object $memberships -L 1
+		$membershipsCount = count $memberships
+		log "Found $membershipsCount memberships in input CSV:" -L 2
+		Log-Object $memberships -L 3
+		
+		# Check that expected user column exists and is fully populated
+		try {
+			$userCol = $memberships | Select -ExpandProperty $InputUserColumn -ErrorAction Stop
+		}
+		catch {
+			Quit "No `"$InputUserColumn`" column detected!"
+		}
+		
+		$userColCount = count $userCol
+		log "Found $userColCount users in `"$InputUserColumn`" column." -L 2
+		if(-not ($userColCount -eq $membershipsCount)) {
+			if($userColCount -le 0) {
+				Quit "No data detected in `"$InputUserColumn`" column!"
+			}
+			elseif($userColCount -lt $membershipsCount) {
+				Quit "Empty fields detected in `"$InputUserColumn`" column!"
+			}
+			else {
+				Quit "Detected more users in `"$InputUserColumn`" column than full memberships!"
+			}
+		}
+		
+		# Check that expected group column exists and is fully populated
+		try {
+			$groupCol = $memberships | Select -ExpandProperty $InputGroupColumn -ErrorAction Stop
+		}
+		catch {
+			Quit "No `"$InputGroupColumn`" column detected!"
+		}
+		
+		$groupColCount = count $groupCol
+		log "Found $groupColCount groups in `"$InputGroupColumn`" column." -L 2
+		if(-not ($groupColCount -eq $membershipsCount)) {
+			if($groupColCount -le 0) {
+				Quit "No `"$InputGroupColumn`" column detected!"
+			}
+			elseif($groupColCount -lt $membershipsCount) {
+				Quit "Empty fields detected in `"$InputGroupColumn`" column!"
+			}
+			else {
+				Quit "Detected more groups in `"$InputGroupColumn`" column than full memberships!"
+			}
+		}
+		
+		# Filter data, and rename input columns, then sort
+		log "Filtering to only user and group columns, and sorting by group and then user..." -L 1
+		$memberships = $memberships | Select @{Name=$OutputGroupColumn;Expression={$_.$InputGroupColumn}},@{Name=$OutputUserColumn;Expression={$_.$InputUserColumn}}
+		$memberships = $memberships | Sort $OutputGroupColumn,$OutputUserColumn
+		Log-Object $memberships -L 2
 		
 		$memberships
 	}
@@ -295,8 +348,8 @@ function Remove-AdGroupMemberships {
 		$memberships = $memberships | ForEach {
 			$membership = $_
 			
-			$userName = $membership.user
-			$groupName = $membership.group
+			$userName = $membership.$OutputUserColumn
+			$groupName = $membership.$OutputGroupColumn
 			log "Validating membership of user `"$userName`" in group `"$groupName`"..." -L 1
 			
 			# Test that user exists
@@ -335,7 +388,10 @@ function Remove-AdGroupMemberships {
 			$membership = $_
 			$result = "unknown"
 			
-			log "Removing membership of user `"$($membership.User)`" in group `"$($membership.Group)`"..." -L 1
+			$user = $membership.$OutputUserColumn
+			$group = $membership.$OutputGroupColumn
+			
+			log "Removing membership of user `"$user`" in group `"$group`"..." -L 1
 			
 			# Make sure membership is valid
 			if(-not $membership.MembershipExists) {
@@ -373,7 +429,7 @@ function Remove-AdGroupMemberships {
 	
 	function Print-Results($memberships) {
 		log "Results:"
-		Log-Object ($memberships | Select Group,User,Result) -L 1
+		Log-Object ($memberships | Select $OutputGroupColumn,$OutputUserColumn,Result) -L 1
 	}
 	
 	function Export-Results($memberships) {

@@ -44,7 +44,7 @@ If not specified, no prompts will be given.
 Required string.  
 The full path to a properly-formatted CSV file.  
 Formatting requirements:  
-  - Columns named `User` and `Group` are required.
+  - Columns named `User` and `Group` are required (by default). Input column names can be customized using the `-InputUserColumn` and `-InputGroupColumn` parameters.
   - Each row represents a single membership of a user in a group.
   - Cells should just contain the regular name of the user or group.
   - Additional columns may be present and will be ignored.  
@@ -52,6 +52,26 @@ Formatting requirements:
 
 `example-input1.csv` shows an example of the minimum requirements.  
 `example-input2.csv` shows an example of the minimum requirements with some extraneous data in columns which will be ignored.  
+
+### -InputUserColumn \<string\>
+Optional string.  
+The name of the column in the input CSV which contains the user names of the memberships.  
+Default is `User`.  
+
+### -InputGroupColumn \<string\>
+Optional string.  
+The name of the column in the input CSV which contains the group names of the memberships.  
+Default is `Group`.  
+
+### -OutputUserColumn \<string\>
+Optional string.  
+The name of the column in the output CSV which contains the usernames of the memberships.  
+Default is `User`.  
+
+### -OutputGroupColumn \<string\>
+Optional string.  
+The name of the column in the output CSV which contains the group names of the memberships.  
+Default is `Group`.  
 
 ### -OutputCsv \<string\>
 Required string.  
