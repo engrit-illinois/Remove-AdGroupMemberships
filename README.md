@@ -49,6 +49,7 @@ Formatting requirements:
   - Cells should just contain the regular name of the user or group.
   - Additional columns may be present and will be ignored.  
   - Columns may be in any order.  
+
 `example-input1.csv` shows an example of the minimum requirements.  
 `example-input2.csv` shows an example of the minimum requirements with some extraneous data in columns which will be ignored.  
 
