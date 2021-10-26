@@ -9,7 +9,7 @@ A script to remove AD users from AD groups, based on given memberships.
 
 # Requirements
 - Requires RSAT to be installed.
-- Must be run as a user account with permissions to modify the relevant AD groups.
+- Must be run as a user account with permissions to modify the relevant AD groups and with access to the MemberOf property of the relevant AD users.
 - Developed and tested on PowerShell v7.1.
 
 # Usage
