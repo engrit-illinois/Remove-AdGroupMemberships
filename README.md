@@ -1,4 +1,4 @@
-## Summary
+# Summary
 A script to remove AD users from AD groups, based on given memberships.  
 
 # Behavior
