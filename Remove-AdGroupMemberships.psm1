@@ -339,7 +339,7 @@ function Remove-AdGroupMemberships {
 		
 		$valid
 	}
-	
+	#
 	function Validate-Memberships($memberships) {
 		
 		log "Validating AD objects and memberships..."
