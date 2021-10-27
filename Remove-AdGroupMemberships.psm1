@@ -320,21 +320,26 @@ function Remove-AdGroupMemberships {
 		$result
 	}
 	
-	function Validate-Membership($membership, $quiet=$false) {
+	function Validate-Membership($membership, $verification=$false) {
 		$valid = $false
 		
 		if($membership.AdObjectsExist) {
 			
-			if($membership.UserObject.MemberOf -contains $membership.GroupObject.DistinguishedName) {
-				if(-not $quiet) { log "Membership exists." -L 2 }
+			$userObject = $membership.UserObject
+			if($verification) {
+				$userObject = $membership.UserObject2
+			}
+			
+			if($userObject.MemberOf -contains $membership.GroupObject.DistinguishedName) {
+				if(-not $verification) { log "Membership exists." -L 2 }
 				$valid = $true
 			}
 			else {
-				if(-not $quiet) { log "Membership does not exist!" -L 2 }
+				if(-not $verification) { log "Membership does not exist!" -L 2 }
 			}
 		}
 		else {
-			if(-not $quiet) { log "User and/or group does not exist!" -L 2 }
+			if(-not $verification) { log "User and/or group does not exist!" -L 2 }
 		}
 		
 		$valid
@@ -408,6 +413,12 @@ function Remove-AdGroupMemberships {
 					Remove-AdGroupMember -Confirm:$ConfirmEach -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
 					
 					# Check that membership was removed
+					
+					# Get updated user info
+					$userObject2 = Validate-AdObject $membership.UserObject.Name "User"
+					$membership = addm "UserObject2" $userObject2 $membership
+					
+					# Check membership no longer exists
 					if(Validate-Membership $membership $true) {
 						$result = "Failed to remove membership!"
 					}
