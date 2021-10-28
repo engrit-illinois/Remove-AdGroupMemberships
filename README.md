@@ -84,6 +84,12 @@ Optional string.
 The distinguished name of the AD OU to limit the search for the given groups. Only groups under this OU will be discovered and modified.  
 Default is `OU=Engineering,OU=Urbana,DC=ad,DC=uillinois,DC=edu`.  
 
+### -VerificationDelaySecs \<int\>
+Optional integer.  
+The number of seconds to wait after attempting all removals and before attempting verification of removals.  
+This ensures that the removals are fully replicated to domain controllers before attempting to verify.  
+Default is `5`.  
+
 ### -Log \<string\>
 Optional string.  
 The full path of a file to log to.  

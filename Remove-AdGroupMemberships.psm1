@@ -22,6 +22,8 @@ function Remove-AdGroupMemberships {
 		
 		[switch]$ConfirmEach,
 		
+		[int]$VerificationDelaySecs = 5,
+		
 		# ":ENGRIT:" will be replaced with "c:\engrit\logs\$($MODULE_NAME)_:TS:.log"
 		# ":TS:" will be replaced with start timestamp
 		[string]$Log,
@@ -295,54 +297,70 @@ function Remove-AdGroupMemberships {
 	
 	# Takes a user or group name and returns the DN of the object if it exists
 	# If object is not found in AD (in the given $OUDN), returns an error string to use as the value instead
-	function Validate-AdObject($name, $type) {
+	function Validate-AdObject($membership, $type, $objectProperty, $verification=$false) {
 		
 		switch($type) {
 			"User" {
-				$result = Get-ADUser -Filter { Name -eq $name } -Properties *
+				$name = $membership.$OutputUserColumn
+				$object = Get-ADUser -Filter { Name -eq $name } -Properties *
 			}
 			"Group" {
-				$result = Get-ADGroup -Filter { Name -eq $name } -SearchBase $GroupOudn
+				$name = $membership.$OutputGroupColumn
+				$object = Get-ADGroup -Filter { Name -eq $name } -SearchBase $GroupOudn
 			}
 			"default" {
 				Quit "Invalid type `"$type`", sent to Validate-AdObject function!"
 			}
 		}
 		
-		if($result) {
-			$dn = $result.DistinguishedName
-			log "$Type exists. DN: `"$dn`"." -L 2
+		if($object) {
+				$result = "$Type exists."
+				$dn = " DN: `"$($object.DistinguishedName)`""
 		}
 		else {
-			log "$Type not found in AD!" -L 2
+			$result = "$Type not found in AD!"
 		}
 		
-		$result
+		if(-not $verification) {
+			$resultLogOutput = "$($result)$($dn)"
+			log $resultLogOutput -L 2
+			$membership = addm "$($type)ValidationResult" $result $membership
+		}
+		
+		$membership = addm $objectProperty $object $membership
+		
+		$membership
 	}
 	
-	function Validate-Membership($membership, $verification=$false) {
+	function Validate-Membership($membership, $userObjectProperty, $verification=$false) {
 		$valid = $false
 		
 		if($membership.AdObjectsExist) {
 			
-			$userObject = $membership.UserObject
-			if($verification) {
-				$userObject = $membership.UserObject2
-			}
+			$userObject = $membership.$userObjectProperty
 			
 			if($userObject.MemberOf -contains $membership.GroupObject.DistinguishedName) {
-				if(-not $verification) { log "Membership exists." -L 2 }
+				$result = "Membership exists."
 				$valid = $true
 			}
 			else {
-				if(-not $verification) { log "Membership does not exist!" -L 2 }
+				$result = "Membership does not exist!"
 			}
 		}
 		else {
-			if(-not $verification) { log "User and/or group does not exist!" -L 2 }
+			$result = "User and/or group does not exist!"
 		}
 		
-		$valid
+		if(-not $verification) {
+			log $result -L 2
+			$membership = addm "MembershipValidationResult" $result $membership
+			$membership = addm "MembershipExists" $valid $membership
+		}
+		else {
+			$membership = addm "MembershipStillExists" $valid $membership
+		}
+		
+		$membership
 	}
 	
 	function Validate-Memberships($memberships) {
@@ -356,13 +374,11 @@ function Remove-AdGroupMemberships {
 			$groupName = $membership.$OutputGroupColumn
 			log "Validating membership of user `"$userName`" in group `"$groupName`"..." -L 1
 			
-			# Test that user exists
-			$userObject = Validate-AdObject $userName "User"
-			$membership = addm "UserObject" $userObject $membership
+			# Validate that user exists
+			$membership = Validate-AdObject $membership "User" "UserObject"
 			
-			# Test that group exists
-			$groupObject = Validate-AdObject $groupName "Group"
-			$membership = addm "GroupObject" $groupObject $membership
+			# Validate that group exists
+			$membership = Validate-AdObject $membership "Group" "GroupObject"
 			
 			# Record whether both AD objects exist
 			$adObjectsExist = $false
@@ -374,9 +390,8 @@ function Remove-AdGroupMemberships {
 			}
 			$membership = addm "AdObjectsExist" $adObjectsExist $membership
 			
-			# Test that membership exists
-			$membershipExists = Validate-Membership $membership
-			$membership = addm "MembershipExists" $membershipExists $membership
+			# Validate that membership exists
+			$membership = Validate-Membership $membership "UserObject"
 			
 			$membership
 		}
@@ -399,7 +414,7 @@ function Remove-AdGroupMemberships {
 			
 			# Make sure membership is valid
 			if(-not $membership.MembershipExists) {
-				$result = "Membership does not exist."
+				$result = "Membership did not exist."
 			}
 			else {
 				if($TestRun) {
@@ -411,25 +426,12 @@ function Remove-AdGroupMemberships {
 					# This could probably be optimized by removing all target members of each specific group at once,
 					# instead of potentially modifying the same group multiple times
 					Remove-AdGroupMember -Confirm:$ConfirmEach -Identity $membership.GroupObject.DistinguishedName -Members $membership.UserObject.DistinguishedName
-					
-					# Check that membership was removed
-					
-					# Get updated user info
-					$userObject2 = Validate-AdObject $membership.UserObject.Name "User"
-					$membership = addm "UserObject2" $userObject2 $membership
-					
-					# Check membership no longer exists
-					if(Validate-Membership $membership $true) {
-						$result = "Failed to remove membership!"
-					}
-					else {
-						$result = "Successfully removed membership."
-					}
+					$result = "Removal attempted."
 				}
 			}
 			
 			log $result -L 2
-			$membership = addm "Result" $result $membership
+			$membership = addm "AttemptResult" $result $membership
 			
 			$membership
 		}
@@ -437,9 +439,53 @@ function Remove-AdGroupMemberships {
 		$memberships
 	}
 	
+	function Verify-Removal($membership) {
+		
+		$user = $membership.$OutputUserColumn
+		$group = $membership.$OutputGroupColumn
+		log "Verifying membership removal of user `"$user`" from group `"$group`"..." -L 2
+		
+		if(-not $membership.MembershipExists) {
+			$result = "Membership did not exist."
+		}
+		else {
+			# Get updated user info
+			$membership = Validate-AdObject $membership "User" "UserObject2" $true
+			
+			# Check membership no longer exists
+			$membership = Validate-Membership $membership "UserObject2" $true
+			if($membership.MembershipStillExists) {
+				$result = "Failed to remove membership!"
+			}
+			else {
+				$result = "Successfully removed membership."
+			}
+		}
+			
+		log $result -L 3
+		$membership = addm "VerificationResult" $result $membership
+		
+		$membership
+	}
+	
+	function Verify-Removals($memberships) {
+		log "Verifying membership removals..."
+		
+		log "Waiting $VerificationDelaySecs seconds for DC replication before verifying..." -L 1
+		Start-Sleep -Seconds $VerificationDelaySecs
+		
+		log "Looping through memberships..." -L 1
+		$memberships = $memberships | ForEach-Object {
+			Verify-Removal $_
+		}
+		log "Done looping through memberships." -L 1
+		
+		$memberships
+	}
+	
 	function Print-Results($memberships) {
 		log "Results:"
-		Log-Object ($memberships | Select $OutputGroupColumn,$OutputUserColumn,Result) -L 1
+		Log-Object ($memberships | Select $OutputGroupColumn,$OutputUserColumn,UserValidationResult,GroupValidationResult,MembershipValidationResult,AttemptResult,VerificationResult) -L 1
 	}
 	
 	function Export-Results($memberships) {
@@ -452,6 +498,7 @@ function Remove-AdGroupMemberships {
 		$memberships = Import-Memberships
 		$memberships = Validate-Memberships $memberships
 		$memberships = Remove-Memberships $memberships
+		$memberships = Verify-Removals $memberships
 		Print-Results $memberships
 		Export-Results $memberships
 		$memberships
