@@ -10,7 +10,7 @@ A script to remove AD users from AD groups, based on given memberships.
 # Requirements
 - Requires RSAT to be installed.
 - Must be run as a user account with write access to the relevant AD groups.
-- Must be run as a user account with read [access to the MemberOf property](https://answers.uillinois.edu/48115) of the relevant AD users.
+- Must be run as a user account with [read access to the MemberOf property](https://answers.uillinois.edu/48115) of the relevant AD users.
 
 # Usage
 1. Download `Remove-AdGroupMemberships.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Remove-AdGroupMemberships\Remove-AdGroupMemberships.psm1`.
