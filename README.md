@@ -123,5 +123,5 @@ Currently not significantly implemented.
 Default is `0`.  
 
 # Notes
-- Developed and tested on PowerShell v7.1. Should work in PowerShell v5.1.
+- Developed and tested on PowerShell v7.1. Should work on PowerShell v5.1.
 - By mseng3. See my other projects here: https://github.com/mmseng/code-compendium.
