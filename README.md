@@ -16,7 +16,7 @@ See also: https://github.com/engrit-illinois/Add-AdGroupMemberships
 
 # Usage
 1. Download `Remove-AdGroupMemberships.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Remove-AdGroupMemberships\Remove-AdGroupMemberships.psm1`.
-  - The above path is for PowerShell v5.1. For later versions, replace `WindowsPowerShell` with `PowerShell`.
+    - The above path is for PowerShell v5.1. For later versions, replace `WindowsPowerShell` with `PowerShell`.
 3. Run it using the examples and documentation provided below, including the `-TestRun` switch.
 4. Review the output to confirm that the changes match your expectations.
 5. Run it again without the `-TestRun` switch.
