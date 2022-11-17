@@ -15,11 +15,10 @@ See also: https://github.com/engrit-illinois/Add-AdGroupMemberships
 - Must be run as a user account with [read access to the MemberOf property](https://answers.uillinois.edu/48115) of the relevant AD users.
 
 # Usage
-1. Download `Remove-AdGroupMemberships.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\Remove-AdGroupMemberships\Remove-AdGroupMemberships.psm1`.
-    - The above path is for PowerShell v5.1. For later versions, replace `WindowsPowerShell` with `PowerShell`.
-3. Run it using the examples and documentation provided below, including the `-TestRun` switch.
-4. Review the output to confirm that the changes match your expectations.
-5. Run it again without the `-TestRun` switch.
+1. Download `Remove-AdGroupMemberships.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
+2. Run it using the examples and documentation provided below, including the `-TestRun` switch.
+3. Review the output to confirm that the changes match your expectations.
+4. Run it again without the `-TestRun` switch.
 
 # Example
 It's recommended to capture the output in a variable, like so:
